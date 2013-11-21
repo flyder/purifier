@@ -20,6 +20,59 @@ class Purifier_Security extends Kohana_Security {
 	protected static $htmlpurifier;
 
 	/**
+	 * Load classes
+	 */
+	protected static function load()
+	{
+		if ( ! class_exists('HTMLPurifier_Config', FALSE))
+		{
+			if (Kohana::$config->load('purifier.preload'))
+			{
+				// Load the all of HTML Purifier right now.
+				// This increases performance with a slight hit to memory usage.
+				require Kohana::find_file('vendor', 'htmlpurifier/library/HTMLPurifier.includes');
+			}
+
+			// Load the HTML Purifier auto loader
+			require Kohana::find_file('vendor', 'htmlpurifier/library/HTMLPurifier.auto');
+		}
+	}
+
+	/**
+	 * Purifier factory
+	 */
+	public static function factory()
+	{
+		// local classes
+		Security::load();
+
+		// Create a new configuration object
+		$config = HTMLPurifier_Config::createDefault();
+
+		if ( ! Kohana::$config->load('purifier.finalize'))
+		{
+			// Allow configuration to be modified
+			$config->autoFinalize = FALSE;
+		}
+
+		// Use the same character set as Kohana
+		$config->set('Core.Encoding', Kohana::$charset);
+
+		if (is_array($settings = Kohana::$config->load('purifier.settings')))
+		{
+			// Load the settings
+			$config->loadArray($settings);
+		}
+
+		// Configure additional options
+		$config = Security::configure($config);
+
+		// Create the purifier instance
+		return new HTMLPurifier($config);
+	}
+
+
+	/**
 	 * Returns the singleton instance of HTML Purifier. If no instance has
 	 * been created, a new instance will be created. Configuration options
 	 * for HTML Purifier can be set in `APPPATH/config/purifier.php` in the
@@ -33,42 +86,8 @@ class Purifier_Security extends Kohana_Security {
 	{
 		if ( ! Security::$htmlpurifier)
 		{
-			if ( ! class_exists('HTMLPurifier_Config', FALSE))
-			{
-				if (Kohana::$config->load('purifier.preload'))
-				{
-					// Load the all of HTML Purifier right now.
-					// This increases performance with a slight hit to memory usage.
-					require Kohana::find_file('vendor', 'htmlpurifier/library/HTMLPurifier.includes');
-				}
-
-				// Load the HTML Purifier auto loader
-				require Kohana::find_file('vendor', 'htmlpurifier/library/HTMLPurifier.auto');
-			}
-
-			// Create a new configuration object
-			$config = HTMLPurifier_Config::createDefault();
-
-			if ( ! Kohana::$config->load('purifier.finalize'))
-			{
-				// Allow configuration to be modified
-				$config->autoFinalize = FALSE;
-			}
-
-			// Use the same character set as Kohana
-			$config->set('Core.Encoding', Kohana::$charset);
-
-			if (is_array($settings = Kohana::$config->load('purifier.settings')))
-			{
-				// Load the settings
-				$config->loadArray($settings);
-			}
-
-			// Configure additional options
-			$config = Security::configure($config);
-
 			// Create the purifier instance
-			Security::$htmlpurifier = new HTMLPurifier($config);
+			Security::$htmlpurifier = Security::factory();
 		}
 
 		return Security::$htmlpurifier;
