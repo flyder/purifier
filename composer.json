@@ -1,0 +1,21 @@
+{
+	"name" : "kohana/htmlpurifier",
+	"version" : "1.2.1",
+	"require": {
+		"php" : ">=5.3.3",
+		"htmlpurifier" : "4.5.0"
+	},
+	"repositories" : [{
+		"type" : "package",
+		"package" : {
+			"name" : "htmlpurifier",
+			"version" : "4.5.0",
+			"dist" : {
+				"url" : "http://htmlpurifier.org/releases/htmlpurifier-4.5.0.zip",
+				"type" : "zip"
+			}
+		}
+	}],
+	"autoload" : {
+	}
+}
