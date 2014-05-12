@@ -1,21 +1,27 @@
 {
-	"name" : "kohana/htmlpurifier",
-	"version" : "1.2.1",
-	"require": {
-		"php" : ">=5.3.3",
-		"htmlpurifier" : "4.5.0"
-	},
-	"repositories" : [{
-		"type" : "package",
-		"package" : {
-			"name" : "htmlpurifier",
-			"version" : "4.5.0",
-			"dist" : {
-				"url" : "http://htmlpurifier.org/releases/htmlpurifier-4.5.0.zip",
-				"type" : "zip"
-			}
+	"name": "shadowhand/purifier",
+	"description": "XSS cleaning module for the Kohana Framework that uses HTML Purifier",
+	"keywords": ["kohana", "security", "xss", "clean", "purifier", "htmlpurifier"],
+	"homepage": "https://github.com/shadowhand/purifier",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Woody Gilk",
+			"email": "woody.gilk@kohanaframework.org"
 		}
-	}],
-	"autoload" : {
+	],
+	"support": {
+		"issues":   "https://github.com/shadowhand/purifier/issues",
+		"source":   "https://github.com/shadowhand/purifier"
+	},
+	"require": {
+		"php": ">=5.3.3",
+		"kohana/core": ">=3.3",
+		"ezyang/htmlpurifier" : ">=4.5"
+	},
+	"extra": {
+		"branch-alias": {
+			"dev-3.3/master": "3.3.x-dev"
+		}
 	}
 }
